@@ -1,9 +1,9 @@
 import socket
 import errno
 import xlsxwriter
-from tkinter import *
-from tkinter import filedialog
-from tkinter import messagebox
+from Tkinter import *
+import tkFileDialog
+import tkMessageBox
 import os.path
 import whois
 import time
@@ -51,11 +51,22 @@ class DomainGetter(Frame):
 	def getSingleDomainBtnClick(self):
 		domainInput = self.singleDomainEntryContent.get()
 		result = whois.whois(domainInput)
-		messagebox.showinfo("Results", result if result.domain_name is not None else "Not Owned \n\nNOTE: simpler domain queries such as \"bing.com\" yield more accurate results than \"http://www.bing.com\"")
+		if (result.domain_name is not None):
+			resultContent = ("Domain Names: \n" + str(result.domain_name) + "\n\n"
+						  + "Registrar: \n" + str(result.registrar) + "\n\n"
+						  + "Name: \n" + str(result.name) + "\n\n"
+						  + "Emails: \n" + str(result.emails) + "\n\n"
+						  + "Address: \n" + (result.address + ", " + result.city + ", " + result.state + " " + result.zipcode if result.address is not None else str(result.address)) + "\n\n"
+						  + "Updated Dates: \n" + (str(result.updated_date) if result.updated_date is None else "; ".join([d.strftime("%B %d, %Y") for d in result.updated_date]) if type(result.updated_date) is list else result.updated_date.strftime("%B %d, %Y")) + "\n\n"
+						  + "Creation Date: \n" + (str(result.creation_date) if result.creation_date is None else "; ".join([d.strftime("%B %d, %Y") for d in result.creation_date]) if type(result.creation_date) is list else result.creation_date.strftime("%B %d, %Y")) + "\n\n"
+						  + "Expiration Date: \n" + (str(result.expiration_date) if result.expiration_date is None else "; ".join([d.strftime("%B %d, %Y") for d in result.expiration_date]) if type(result.expiration_date) is list else result.expiration_date.strftime("%B %d, %Y")))
+			tkMessageBox.showinfo("Results", resultContent)
+		else:
+			tkMessageBox.showinfo("Results", "Not Owned \n\nNOTE: simpler domain queries such as \"bing.com\" yield more accurate results than \"http://www.bing.com\"")
 
 
 	def browseFile(self):
-		filePath = filedialog.askopenfilename(filetypes = (("Text files", "*.txt"),
+		filePath = tkFileDialog.askopenfilename(filetypes = (("Text files", "*.txt"),
 	                                   				       ("All files", "*.*") ))
 		if (filePath):
 			self.multiDomainEntryContent.set(filePath)
@@ -125,7 +136,7 @@ class DomainGetter(Frame):
 
 				self.createOutputExcelFile(outputExcelFile, fileContent, domainInfo)
 			else:
-				messagebox.showinfo("WARNING: Invalid File Path", "The file path provided seems to be invalid, please review and try again.\nIf the file path is correct and you still receive this error, please contact the developer.")
+				tkMessageBox.showinfo("WARNING: Invalid File Path", "The file path provided seems to be invalid, please review and try again.\nIf the file path is correct and you still receive this error, please contact the developer.")
 
 		except socket.error as e:
 			if e.errno == errno.WSAECONNRESET:
@@ -133,11 +144,15 @@ class DomainGetter(Frame):
 				retry_action()
 			else:
 				raise
-		except:
-			messagebox.showinfo("Error", "Something went wrong. Make sure the path you entered is correct and try again.\nIf the error continues, please contact the developer.")
+		except Exception as err:
+			print(err)
+			tkMessageBox.showinfo("Error", "Something went wrong. Make sure the path you entered is correct and try again.\nIf the error continues, please contact the developer.")
 
 		self.getMultiDomainBtn.config(text = "Export to Excel")
-		messagebox.showinfo("Success", "Results can be found here:\n\n" + outputExcelFile)
+		if ('outputExcelFile' in locals()):
+			tkMessageBox.showinfo("Success", "Results can be found here:\n\n" + outputExcelFile)
+		else:
+			tkMessageBox.showinfo("Error", "Something went wrong. Make sure the path you entered is correct and try again.\nIf the error continues, please contact the developer.")
 
 if __name__ == "__main__":
 	DomainGetter().mainloop()

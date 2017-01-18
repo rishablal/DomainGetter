@@ -1,0 +1,1 @@
+/Library/Python/2.7/site-packages/whois/_3_adjust.py

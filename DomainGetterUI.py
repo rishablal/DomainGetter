@@ -13,7 +13,7 @@ class DomainGetter(Frame):
 	def __init__(self):
 		Frame.__init__(self)
 		self.master.title("Domain Getter")
-		self.master.iconbitmap('assets/windowIcon.ico')
+		self.master.iconbitmap(os.path.join(os.path.dirname(sys.executable), 'data', 'windowIcon'))
 
 		# initialize grid
 		self.master.rowconfigure(2, weight = 1)
@@ -144,15 +144,13 @@ class DomainGetter(Frame):
 				retry_action()
 			else:
 				raise
-		except Exception as err:
-			print(err)
+		except:
 			tkMessageBox.showinfo("Error", "Something went wrong. Make sure the path you entered is correct and try again.\nIf the error continues, please contact the developer.")
 
 		self.getMultiDomainBtn.config(text = "Export to Excel")
 		if ('outputExcelFile' in locals()):
 			tkMessageBox.showinfo("Success", "Results can be found here:\n\n" + outputExcelFile)
-		else:
-			tkMessageBox.showinfo("Error", "Something went wrong. Make sure the path you entered is correct and try again.\nIf the error continues, please contact the developer.")
+
 
 if __name__ == "__main__":
 	DomainGetter().mainloop()

@@ -1,0 +1,3 @@
+([('DomainGetterUI',
+   '/Users/rishablal/dev/DomainGetter/dist/DomainGetterUI',
+   'EXECUTABLE')],)

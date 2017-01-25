@@ -10,7 +10,8 @@ from setuptools import setup
 APP = ['DomainGetterUI.py']
 DATA_FILES = ['/Library/Python/2.7/site-packages/whois',
  '/Library/Python/2.7/site-packages/xlsxwriter',
- '/Library/Python/2.7/site-packages/tkinter']
+ '/Library/Python/2.7/site-packages/tkinter',
+              '/Library/Python/2.7/site-packages/socketserver']
 OPTIONS = {'argv_emulation': True,
  'iconfile': '/Users/rishablal/dev/DomainGetter/assets/windowIcon'}
 
